@@ -20,7 +20,7 @@
 {
     [super viewDidLoad];
     AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
-    NSLog(@"VIEW DID LOAD");
+
 	// Do any additional setup after loading the view, typically from a nib.
     musicPlayController = [MPMusicPlayerController iPodMusicPlayer];
     [self registerMediaPlayerNotifications];
@@ -28,7 +28,7 @@
     //[self displayVolumeView];
     
     [musicPlayController setQueueWithItemCollection:delegate.playList];
-    [musicPlayController play];
+
     [musicPlayController setShuffleMode:MPMusicShuffleModeOff];
     [musicPlayController setRepeatMode:MPMusicRepeatModeNone];
     [self handlePlayBackStateChanged:nil];
@@ -101,7 +101,7 @@
 - (void)handleNowPlayingItemChanged: (id) notification{
     int i =  [musicPlayController indexOfNowPlayingItem];
 
-    if (i > 0) {
+
         NSLog([NSString stringWithFormat:@"%i",i]);
         
         AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
@@ -111,16 +111,16 @@
             
             NSArray *songs = [delegate.playList items];
             
-            
-            if ([songs objectAtIndex:i]) {
+            if (![songs objectAtIndex:i+1]) {
+                self.nextTrackLabel.text =  @"NO NEXT SONG";
+
+            }else{
                 MPMediaItem *song = [songs objectAtIndex:i+1];
 
-                self.nextTrackLabel.text = [song valueForProperty:MPMediaItemPropertyArtist];
-            }else{
-                self.nextTrackLabel.text =  @"NO NEXT SONG";
+                self.nextTrackLabel.text = [song valueForProperty:MPMediaItemPropertyTitle];
+
             }
             
-        }
     }
     
 
