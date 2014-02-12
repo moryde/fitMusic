@@ -123,9 +123,9 @@
 			children = (
 				63D2660018A5124600F80B45 /* AppDelegate.h */,
 				63D2660118A5124600F80B45 /* AppDelegate.m */,
-				63D2660318A5124600F80B45 /* Main_iPhone.storyboard */,
 				63D2663118A554AF00F80B45 /* PlaylistPickerViewController.h */,
 				63D2663218A554AF00F80B45 /* PlaylistPickerViewController.m */,
+				63D2660318A5124600F80B45 /* Main_iPhone.storyboard */,
 				63D2660618A5124600F80B45 /* Main_iPad.storyboard */,
 				63D2660918A5124600F80B45 /* ViewController.h */,
 				63D2660A18A5124600F80B45 /* ViewController.m */,
@@ -211,6 +211,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = Ydefeldt;
 				TargetAttributes = {
+					63D265ED18A5124600F80B45 = {
+						DevelopmentTeam = 6V8W5E58Z8;
+					};
 					63D2661118A5124700F80B45 = {
 						TestTargetID = 63D265ED18A5124600F80B45;
 					};
@@ -402,10 +405,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FitMusic/FitMusic-Prefix.pch";
 				INFOPLIST_FILE = "FitMusic/FitMusic-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -415,10 +421,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FitMusic/FitMusic-Prefix.pch";
 				INFOPLIST_FILE = "FitMusic/FitMusic-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -510,10 +519,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FitMusic/FitMusic-Prefix.pch";
 				INFOPLIST_FILE = "FitMusic/FitMusic-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = AdhockDistribution;
@@ -562,6 +574,7 @@
 				63D2662518A5124700F80B45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		63D2662618A5124700F80B45 /* Build configuration list for PBXNativeTarget "FitMusicTests" */ = {
 			isa = XCConfigurationList;
@@ -571,6 +584,7 @@
 				63D2662818A5124700F80B45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
