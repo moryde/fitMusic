@@ -62,23 +62,4 @@
     return 1;
 }
 
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-
-    return self.playlists.count;
-}
-
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    return [self.playlists[row] valueForProperty:MPMediaPlaylistPropertyName];
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-
-    AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
-    
-    delegate.playList = self.playlists[row];
-    
-}
-
 @end

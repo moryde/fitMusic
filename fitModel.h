@@ -24,6 +24,8 @@
 
 - (void) registerMediaPlayerNotifications;
 - (void) startMusic;
+- (void) stopMusic;
+
 - (NSString*) songsInQueue;
 - (NSString*) getNextTrack;
 

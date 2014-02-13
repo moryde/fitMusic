@@ -25,31 +25,39 @@
     _fitModel.delegate = self;
     NSLog(@"VIEW DID LOAD");
 	// Do any additional setup after loading the view, typically from a nib.
+
     [self updateUI];
+    UIColor * color = [UIColor colorWithRed:17/255.0f green:168/255.0f blue:170/255.0f alpha:1.0f];
+
+    //[self.navigationController.navigationBar setBackgroundColor:[UIColor greenColor]];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setBarTintColor:color];
+
+    NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                               [UIColor whiteColor],NSForegroundColorAttributeName,
+                                               [UIColor blackColor], NSShadowAttributeName,
+                                               [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
     
-    //[self displayVolumeView];
-    AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
-    
-    self.playList = delegate.playList;
-    [self.nextSongsTextField setText:@""];
-    
-    NSArray *a = [self.playList items];
-    for (MPMediaItem *song in a) {
+    [[UINavigationBar appearance] setTitleTextAttributes:navbarTitleTextAttributes];
+    [self setTitle:@"fitMusic"];
+}
+
+- (void)setTitle:(NSString *)title
+{
+    [super setTitle:title];
+    UILabel *titleView = (UILabel *)self.navigationItem.titleView;
+    if (!titleView) {
+        titleView = [[UILabel alloc] initWithFrame:CGRectZero];
+        titleView.backgroundColor = [UIColor clearColor];
+        titleView.font = [UIFont boldSystemFontOfSize:25.0];
+        titleView.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
         
+        titleView.textColor = [UIColor whiteColor]; // Change to desired color
         
-        NSString *title =  [self.nextSongsTextField.text stringByAppendingString:[song valueForProperty:MPMediaItemPropertyTitle]];
-        NSString *title2 = [title stringByAppendingString:@"\n"];
-        [self.nextSongsTextField setText:title2];
-        musicPlayController = [MPMusicPlayerController iPodMusicPlayer];
-        
-        
-        [musicPlayController setQueueWithItemCollection:delegate.playList];
-        [musicPlayController setShuffleMode:MPMusicShuffleModeOff];
-        [musicPlayController setRepeatMode:MPMusicRepeatModeAll];
-        
-        [self updateUI];
-        [musicPlayController play];
+        self.navigationItem.titleView = titleView;
     }
+    titleView.text = title;
+    [titleView sizeToFit];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -57,8 +65,12 @@
     NSLog(@"VIEW DID APPEAR");
     [super viewDidAppear:YES];
     _fitModel.delegate = self;
-    [self updateUI];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self updateUI];
 }
 
 -(void)newInformation {
@@ -74,6 +86,8 @@
 -(void)updateUI{
 
     if ((_fitModel.currentPlaylist)) {
+        
+        //[[self.navigationController topViewController] setTitle:[_fitModel.currentPlaylist valueForProperty:MPMediaPlaylistPropertyName]];
         [self.playlistButton setTitle:[_fitModel.currentPlaylist valueForProperty:MPMediaPlaylistPropertyName] forState:UIControlStateNormal];
         self.trackLabel.text = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyTitle];
         
@@ -142,28 +156,13 @@
     NSLog(@"PlayButtonPressed");
     if (_fitModel.currentPlaylist) {
         if ([_fitModel.musicController playbackState] == MPMusicPlaybackStatePlaying) {
-            [_fitModel.musicController pause];
+            [_fitModel stopMusic];
         } else {
             [_fitModel startMusic];
         }
     }
 }
 
-- (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection
-{
-    if (mediaItemCollection) {
-        
-        [musicPlayController setQueueWithItemCollection: mediaItemCollection];
-        [musicPlayController play];
-    }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 - (IBAction)nextButton:(id)sender {
 
@@ -176,7 +175,6 @@
         [_fitModel.musicController skipToPreviousItem];
     }else{
         [_fitModel.musicController skipToBeginning];
-
     }
     
 }
@@ -186,21 +184,15 @@
 
     if (self.commentsTextView.tag == 1) {
         self.commentsTextView.tag = 0;
-        self.commentsTextView.text = [[_fitModel currentSong] valueForProperty:MPMediaItemPropertyComments];
+        NSAttributedString *s = [[NSAttributedString alloc] initWithString:[[_fitModel currentSong] valueForProperty:MPMediaItemPropertyComments]];
+        self.commentsTextView.attributedText = s;
 
     }else{
         self.commentsTextView.tag = 1;
-        self.commentsTextView.text = [_fitModel songsInQueue];
+        self.commentsTextView.attributedText = [[NSAttributedString alloc]initWithString:[_fitModel songsInQueue]];
 
     }
-    
-    
-}
 
-- (IBAction)displayPlaylitsStop:(id)sender {
-    
-
-    
 }
 
 - (void)didReceiveMemoryWarning

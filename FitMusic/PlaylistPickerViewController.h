@@ -19,5 +19,5 @@
 @property (strong, nonatomic) fitModel *fitmodel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *playListCell;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic) NSArray *playlists;
+
 @end

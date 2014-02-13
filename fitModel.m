@@ -24,7 +24,7 @@ static fitModel *singletonInstance;
         MPMediaQuery *playlistsQuery = [MPMediaQuery playlistsQuery];
         self.playLists = [playlistsQuery collections];
         self.musicController = [MPMusicPlayerController iPodMusicPlayer];
-        
+        [self.musicController stop];
         NSLog(@"Singleton Init");
     }
     return self;
@@ -40,12 +40,12 @@ static fitModel *singletonInstance;
 }
 
 - (void)setCurrentPlaylist:(MPMediaPlaylist *)currentPlaylist {
+    _currentPlaylist = currentPlaylist;
+    _currentSong = [[currentPlaylist items] firstObject];
     
     [self.musicController setQueueWithItemCollection:currentPlaylist];
     [self.musicController setShuffleMode:MPMusicShuffleModeOff];
     [self.musicController setRepeatMode:MPMusicRepeatModeAll];
-    _currentPlaylist = currentPlaylist;
-    _currentSong = [[currentPlaylist items] firstObject];
     [self.musicController skipToBeginning];
 }
 
@@ -72,6 +72,11 @@ static fitModel *singletonInstance;
     NSMutableString *myString = [[NSMutableString alloc] init];
 
     for (MPMediaItem* song in [_currentPlaylist items]) {
+        
+        if ([song isEqual: [_currentPlaylist.items objectAtIndex:_musicController.indexOfNowPlayingItem]] ) {
+            [myString appendString:@"THIS IS IT "];
+        }
+        
         [myString appendString:[song valueForProperty:MPMediaItemPropertyTitle]];
         [myString appendString:@"\n"];
     }
@@ -113,19 +118,18 @@ static fitModel *singletonInstance;
 }
 
 - (void) timerUpdated{
-    NSLog(@"TIMER");
     [delegate newInformation];
 }
 
 - (void) startMusic {
     NSLog(@"Start Music");
     [self registerMediaPlayerNotifications];
-
     [_musicController play];
-
     NSTimer *uiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerUpdated) userInfo:nil repeats:YES];
-    
-    
+}
+
+- (void) stopMusic {
+    [_musicController pause];
 }
 
 @end

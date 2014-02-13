@@ -30,7 +30,6 @@
 - (IBAction)previousButton:(id)sender;
 
 - (IBAction)DisplayPlayNextSongs:(id)sender;
-- (IBAction)displayPlaylitsStop:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIView *playListView;
 @property (weak, nonatomic) IBOutlet UITextView *nextSongsTextField;
