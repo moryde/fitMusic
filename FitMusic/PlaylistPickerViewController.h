@@ -9,12 +9,15 @@
 #import "ViewController.h"
 #import "AppDelegate.h"
 #import <MediaPlayer/MediaPlayer.h>
-@interface PlaylistPickerViewController : ViewController <UIPickerViewDataSource,UIPickerViewDelegate>
+#import "fitModel.h"
+
+@interface PlaylistPickerViewController : ViewController <UITableViewDataSource,UITableViewDelegate>
 
 {
-    UIPickerView *playlistPickerview;
     
 }
-@property (weak, nonatomic) IBOutlet UIPickerView *playlistPickerView;
+@property (strong, nonatomic) fitModel *fitmodel;
+@property (weak, nonatomic) IBOutlet UITableViewCell *playListCell;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *playlists;
 @end

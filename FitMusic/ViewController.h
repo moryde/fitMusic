@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "AppDelegate.h"
-
-@interface ViewController : UIViewController <MPMediaPickerControllerDelegate>{
+#import "fitModel.h"
+@interface ViewController : UIViewController <UINavigationControllerDelegate, fitDelegate>{
     
     MPMusicPlayerController *musicPlayController;
     BOOL format;
 }
+
+@property (nonatomic) fitModel* fitModel;
 
 @property (weak, nonatomic) IBOutlet UILabel *artistLabel;
 @property (weak, nonatomic) IBOutlet UILabel *trackLabel;
@@ -23,20 +25,23 @@
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (nonatomic) BOOL format;
 
-- (IBAction)libraryButton:(id)sender;
 - (IBAction)playButton:(id)sender;
 - (IBAction)nextButton:(id)sender;
 - (IBAction)previousButton:(id)sender;
 
-- (void) registerMediaPlayerNotifications;
+- (IBAction)DisplayPlayNextSongs:(id)sender;
+- (IBAction)displayPlaylitsStop:(id)sender;
 
-@property (weak, nonatomic) IBOutlet UIView *volumeView;
+@property (weak, nonatomic) IBOutlet UIView *playListView;
+@property (weak, nonatomic) IBOutlet UITextView *nextSongsTextField;
+
 @property (weak, nonatomic) IBOutlet UITextView *commentsTextView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLeftLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *playlistButton;
 @property (nonatomic) NSTimer *uiTimer;
-@property (weak, nonatomic) IBOutlet UILabel *playlistLabel;
+
 @property (weak, nonatomic) IBOutlet UILabel *nextTrackLabel;
+@property (weak, nonatomic) IBOutlet UIProgressView *playProgressSlider;
 
 @end

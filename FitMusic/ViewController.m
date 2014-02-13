@@ -14,70 +14,113 @@
 
 
 @implementation ViewController
-@synthesize musicPlayController;
+@synthesize musicPlayController, format;
+
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
-
+    _fitModel = [fitModel getInstance];
+    _fitModel.delegate = self;
+    NSLog(@"VIEW DID LOAD");
 	// Do any additional setup after loading the view, typically from a nib.
-    musicPlayController = [MPMusicPlayerController iPodMusicPlayer];
-    [self registerMediaPlayerNotifications];
+    [self updateUI];
     
     //[self displayVolumeView];
+    AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
     
-    [musicPlayController setQueueWithItemCollection:delegate.playList];
+    self.playList = delegate.playList;
+    [self.nextSongsTextField setText:@""];
+    
+    NSArray *a = [self.playList items];
+    for (MPMediaItem *song in a) {
+        
+        
+        NSString *title =  [self.nextSongsTextField.text stringByAppendingString:[song valueForProperty:MPMediaItemPropertyTitle]];
+        NSString *title2 = [title stringByAppendingString:@"\n"];
+        [self.nextSongsTextField setText:title2];
+        musicPlayController = [MPMusicPlayerController iPodMusicPlayer];
+        
+        
+        [musicPlayController setQueueWithItemCollection:delegate.playList];
+        [musicPlayController setShuffleMode:MPMusicShuffleModeOff];
+        [musicPlayController setRepeatMode:MPMusicRepeatModeAll];
+        
+        [self updateUI];
+        [musicPlayController play];
+    }
+}
 
-    [musicPlayController setShuffleMode:MPMusicShuffleModeOff];
-    [musicPlayController setRepeatMode:MPMusicRepeatModeNone];
-    [self handlePlayBackStateChanged:nil];
-    [self handleNowPlayingItemChanged:nil];
-    [self.playlistButton setTitle:[delegate.playList valueForProperty:MPMediaPlaylistPropertyName] forState:UIControlStateNormal];
+-(void)viewDidAppear:(BOOL)animated{
+
+    NSLog(@"VIEW DID APPEAR");
+    [super viewDidAppear:YES];
+    _fitModel.delegate = self;
+    [self updateUI];
+    
+}
+
+-(void)newInformation {
+    NSLog(@"TIMER");
+    [self updateUI];
+}
+
+-(void)playStateChanged:(NSString *)playString{
+    
+    [self.playButton setTitle:playString forState:UIControlStateNormal];
 }
 
 -(void)updateUI{
-    NSNumber *totalTrackTime = [musicPlayController.nowPlayingItem valueForProperty:(MPMediaItemPropertyPlaybackDuration)];
-    NSTimeInterval currentPlaybackTime = [musicPlayController currentPlaybackTime];
-    int timeRemaining = totalTrackTime.intValue - currentPlaybackTime;
-    self.timeLeftLabel.text = [NSString stringWithFormat:@"%i",timeRemaining];
 
-    int hour = timeRemaining / 3600;
-    int minutes = timeRemaining / 60 - hour * 60;
-    int seconds = timeRemaining - (hour * 3600 + minutes * 60);
-    
-    NSString *stringTime = [NSString stringWithFormat:@"%i:%i",minutes,seconds];
-    if (self.format == 0) {
-        self.timeLeftLabel.text = stringTime;
-    } else {
+    if ((_fitModel.currentPlaylist)) {
+        [self.playlistButton setTitle:[_fitModel.currentPlaylist valueForProperty:MPMediaPlaylistPropertyName] forState:UIControlStateNormal];
+        self.trackLabel.text = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyTitle];
+        
+        if (self.commentsTextView.tag == 0) {
+            self.commentsTextView.text = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyComments];
+            if ([[_fitModel.currentSong valueForProperty:MPMediaItemPropertyComments] isEqualToString:@""]) {
+                self.commentsTextView.text = @"No comments availible";
+            }
+        }
+        
+        NSNumber *totalTrackTime = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyPlaybackDuration];
+        NSTimeInterval currentPlaybackTime = [_fitModel.musicController currentPlaybackTime];
+        int timeRemaining = totalTrackTime.intValue - currentPlaybackTime;
+        
+        [self.playProgressSlider setProgress:(currentPlaybackTime/[totalTrackTime integerValue]) animated:YES];
+        self.nextTrackLabel.text = [_fitModel getNextTrack];
         self.timeLeftLabel.text = [NSString stringWithFormat:@"%i",timeRemaining];
-
+        
+        NSLog(@"%f",self.playProgressSlider.progress);
+        int hour = timeRemaining / 3600;
+        int minutes = timeRemaining / 60 - hour * 60;
+        int seconds = timeRemaining - (hour * 3600 + minutes * 60);
+        NSString *stringTime = [NSString stringWithFormat:@"%i:%@",minutes,[NSString stringWithFormat:@"%02d", seconds]];
+        
+        if (self.format == 0) {
+            self.timeLeftLabel.text = stringTime;
+        } else {
+            self.timeLeftLabel.text = [NSString stringWithFormat:@"%i",timeRemaining];
+            
+        }
+        
+    }else
+    {
+        self.trackLabel.text = @"Please select a playlist";
+        [self.playlistButton setTitle:@"Please press here" forState:UIControlStateNormal];
     }
+    
+    //[self.playProgressSlider setContentScaleFactor:[totalTrackTime floatValue]];
+
+
 }
 
 
 -(void) displayVolumeView
 {
-    MPVolumeView *myVolumeView = [[MPVolumeView alloc] initWithFrame: self.volumeView.bounds];
-    [self.volumeView addSubview: myVolumeView];
-}
-
-- (void) registerMediaPlayerNotifications
-{
-    
-
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                           selector: @selector (handleNowPlayingItemChanged:)
-                               name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-                             object: musicPlayController];
-    
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                            selector: @selector (handlePlayBackStateChanged:)
-                            name: MPMusicPlayerControllerPlaybackStateDidChangeNotification
-                            object: musicPlayController];
-    
-    [musicPlayController beginGeneratingPlaybackNotifications];
-
+    //MPVolumeView *myVolumeView = [[MPVolumeView alloc] initWithFrame: self.volumeView.bounds];
+    //[self.volumeView addSubview: myVolumeView];
 }
 
 -(void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
@@ -87,8 +130,6 @@
         self.format = !self.format;
         [self updateUI];
     }
-    
-    
 }
 
 - (void) changeTimeLabel{
@@ -97,69 +138,15 @@
     
 }
 
-
-- (void)handleNowPlayingItemChanged: (id) notification{
-    int i =  [musicPlayController indexOfNowPlayingItem];
-
-
-        NSLog([NSString stringWithFormat:@"%i",i]);
-        
-        AppDelegate *delegate = (AppDelegate*) [UIApplication sharedApplication].delegate;
-        
-        if (delegate.playList) {
-            NSLog([NSString stringWithFormat:@"%i", [delegate.playList count]]);
-            
-            NSArray *songs = [delegate.playList items];
-            
-            if (![songs objectAtIndex:i+1]) {
-                self.nextTrackLabel.text =  @"NO NEXT SONG";
-
-            }else{
-                MPMediaItem *song = [songs objectAtIndex:i+1];
-
-                self.nextTrackLabel.text = [song valueForProperty:MPMediaItemPropertyTitle];
-
-            }
-            
-    }
-    
-
-    
-    self.artistLabel.text = [musicPlayController.nowPlayingItem valueForProperty:MPMediaItemPropertyArtist];
-    self.trackLabel.text = [musicPlayController.nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
-    
-    if ([musicPlayController.nowPlayingItem valueForProperty:MPMediaItemPropertyComments]) {
-        self.commentsTextView.text = [musicPlayController.nowPlayingItem valueForProperty:MPMediaItemPropertyComments];
-    }else {
-        self.commentsTextView.text = @"No comments availible for this song";
-        [musicPlayController.nowPlayingItem valueForProperty:MPMediaPlaylistPropertyName];
-    }
-    
-
-}
-
-
-- (void)handlePlayBackStateChanged: (id) notification{
-    if ([musicPlayController playbackState] == MPMusicPlaybackStatePlaying) {
-        [self.playButton setTitle:@"Pause" forState:UIControlStateNormal];
-        self.uiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateUI) userInfo:nil repeats:YES];
-        [self handleNowPlayingItemChanged:Nil];
-    } else {
-        [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
-        [self.uiTimer invalidate];
-    }
-}
-
-
-
 - (IBAction)playButton:(id)sender {
-    if ([musicPlayController playbackState] == MPMusicPlaybackStatePlaying) {
-        [musicPlayController pause];
-        
-    } else {
-        [musicPlayController play];
+    NSLog(@"PlayButtonPressed");
+    if (_fitModel.currentPlaylist) {
+        if ([_fitModel.musicController playbackState] == MPMusicPlaybackStatePlaying) {
+            [_fitModel.musicController pause];
+        } else {
+            [_fitModel startMusic];
+        }
     }
-    
 }
 
 - (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection
@@ -179,21 +166,40 @@
 }
 
 - (IBAction)nextButton:(id)sender {
-    
-    [musicPlayController skipToNextItem];
+
+    [_fitModel.musicController skipToNextItem];
 }
 
 - (IBAction)previousButton:(id)sender {
     
-    if ([musicPlayController currentPlaybackTime] < 3) {
-        [musicPlayController skipToPreviousItem];
+    if ([_fitModel.musicController currentPlaybackTime] < 3) {
+        [_fitModel.musicController skipToPreviousItem];
     }else{
-        [musicPlayController skipToBeginning];
+        [_fitModel.musicController skipToBeginning];
 
     }
     
 }
-- (IBAction)libraryButton:(id)sender {
+
+
+- (IBAction)DisplayPlayNextSongs:(id)sender {
+
+    if (self.commentsTextView.tag == 1) {
+        self.commentsTextView.tag = 0;
+        self.commentsTextView.text = [[_fitModel currentSong] valueForProperty:MPMediaItemPropertyComments];
+
+    }else{
+        self.commentsTextView.tag = 1;
+        self.commentsTextView.text = [_fitModel songsInQueue];
+
+    }
+    
+    
+}
+
+- (IBAction)displayPlaylitsStop:(id)sender {
+    
+
     
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		632C357F18ABE4DB001B50EE /* fitModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 632C357E18ABE4DB001B50EE /* fitModel.m */; };
 		63D265F218A5124600F80B45 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D265F118A5124600F80B45 /* Foundation.framework */; };
 		63D265F418A5124600F80B45 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D265F318A5124600F80B45 /* CoreGraphics.framework */; };
 		63D265F618A5124600F80B45 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D265F518A5124600F80B45 /* UIKit.framework */; };
@@ -37,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		632C357D18ABE4DB001B50EE /* fitModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fitModel.h; path = ../fitModel.h; sourceTree = "<group>"; };
+		632C357E18ABE4DB001B50EE /* fitModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = fitModel.m; path = ../fitModel.m; sourceTree = "<group>"; };
 		63D265EE18A5124600F80B45 /* FitMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63D265F118A5124600F80B45 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63D265F318A5124600F80B45 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -121,14 +124,16 @@
 		63D265F718A5124600F80B45 /* FitMusic */ = {
 			isa = PBXGroup;
 			children = (
+				632C357D18ABE4DB001B50EE /* fitModel.h */,
+				632C357E18ABE4DB001B50EE /* fitModel.m */,
+				63D2660918A5124600F80B45 /* ViewController.h */,
+				63D2660A18A5124600F80B45 /* ViewController.m */,
 				63D2660018A5124600F80B45 /* AppDelegate.h */,
 				63D2660118A5124600F80B45 /* AppDelegate.m */,
 				63D2663118A554AF00F80B45 /* PlaylistPickerViewController.h */,
 				63D2663218A554AF00F80B45 /* PlaylistPickerViewController.m */,
 				63D2660318A5124600F80B45 /* Main_iPhone.storyboard */,
 				63D2660618A5124600F80B45 /* Main_iPad.storyboard */,
-				63D2660918A5124600F80B45 /* ViewController.h */,
-				63D2660A18A5124600F80B45 /* ViewController.m */,
 				63D2660C18A5124600F80B45 /* Images.xcassets */,
 				63D265F818A5124600F80B45 /* Supporting Files */,
 			);
@@ -266,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63D2663318A554AF00F80B45 /* PlaylistPickerViewController.m in Sources */,
+				632C357F18ABE4DB001B50EE /* fitModel.m in Sources */,
 				63D2660B18A5124600F80B45 /* ViewController.m in Sources */,
 				63D2660218A5124600F80B45 /* AppDelegate.m in Sources */,
 				63D265FE18A5124600F80B45 /* main.m in Sources */,

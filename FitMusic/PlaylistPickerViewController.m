@@ -7,6 +7,7 @@
 //
 
 #import "PlaylistPickerViewController.h"
+#import "fitModel.h"
 
 @interface PlaylistPickerViewController ()
 
@@ -28,8 +29,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    MPMediaQuery *playlistsQuery = [MPMediaQuery playlistsQuery];
-    self.playlists = [playlistsQuery collections];
+
+    _fitmodel = [fitModel getInstance];
 }
 
 - (void)didReceiveMemoryWarning
@@ -38,7 +39,24 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+   return [_fitmodel.playLists count];
+}
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    [_fitmodel setCurrentPlaylist:[_fitmodel.playLists objectAtIndex:indexPath.row]];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = [[UITableViewCell alloc] init];
+    cell.textLabel.text = [[_fitmodel.playLists objectAtIndex:indexPath.row] valueForProperty:MPMediaPlaylistPropertyName];
+    return cell;
+    
+}
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
     return 1;
