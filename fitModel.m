@@ -66,23 +66,39 @@ static fitModel *singletonInstance;
     return @"Please select playlist";
 
 }
-- (NSString*)songsInQueue{
+- (NSAttributedString*)songsInQueue{
     
    // NSAttributedString *s = [[NSAttributedString alloc] init];
     NSMutableString *myString = [[NSMutableString alloc] init];
+    
+    UIColor * color = [UIColor colorWithRed:17/255.0f green:168/255.0f blue:170/255.0f alpha:1.0f];
+    
+    NSMutableAttributedString *as = [[NSMutableAttributedString alloc]init];
 
     for (MPMediaItem* song in [_currentPlaylist items]) {
         
+        NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                   color,NSForegroundColorAttributeName,
+                                                   [UIColor blackColor], NSShadowAttributeName,
+                                                   [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
+        NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:[song valueForProperty:MPMediaItemPropertyAlbumArtist] attributes:navbarTitleTextAttributes];
+
+        [as appendAttributedString:appendString];
+
         if ([song isEqual: [_currentPlaylist.items objectAtIndex:_musicController.indexOfNowPlayingItem]] ) {
-            [myString appendString:@"THIS IS IT "];
+            
+            NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                       [UIColor blackColor],NSForegroundColorAttributeName,
+                                                       [UIColor blackColor], NSShadowAttributeName,
+                                                       [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
+            NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:[song valueForProperty:MPMediaItemPropertyAlbumArtist] attributes:navbarTitleTextAttributes];
+            [as appendAttributedString:appendString];
         }
-        
-        [myString appendString:[song valueForProperty:MPMediaItemPropertyTitle]];
-        [myString appendString:@"\n"];
+
     }
     NSString *s = myString;
     
-    return s;
+    return as;
 }
 
 -(void)registerMediaPlayerNotifications{

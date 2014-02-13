@@ -26,7 +26,7 @@
 - (void) startMusic;
 - (void) stopMusic;
 
-- (NSString*) songsInQueue;
+- (NSAttributedString*) songsInQueue;
 - (NSString*) getNextTrack;
 
 
