@@ -66,6 +66,40 @@ static fitModel *singletonInstance;
     return @"Please select playlist";
 
 }
+
+- (NSAttributedString*) getComments {
+    NSAttributedString *as = [NSAttributedString alloc];
+    
+    NSData *data = [[_currentSong valueForProperty:MPMediaItemPropertyComments] dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *error;
+    
+    NSMutableDictionary  * json = [NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: &error];
+
+    if(error){
+        NSLog([error description]);
+    }
+    
+    NSLog([json debugDescription]);
+    if ([json objectForKey:[NSString stringWithFormat:@"%f",_musicController.currentPlaybackTime]]) {
+        NSLog(@"EVEN");
+    }
+    
+    UIColor * color = [UIColor colorWithRed:17/255.0f green:168/255.0f blue:170/255.0f alpha:1.0f];
+
+    NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                               color,NSForegroundColorAttributeName,
+                                               [UIColor blackColor], NSShadowAttributeName,
+                                               [UIFont boldSystemFontOfSize:20] ,NSFontAttributeName,
+                                               [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
+    if ([_currentSong valueForProperty:MPMediaItemPropertyComments]) {
+        [as initWithString:[_currentSong valueForProperty:MPMediaItemPropertyComments] attributes:navbarTitleTextAttributes];
+    } else {
+        [as initWithString:@"No comments present for this song, please add in iTunes" attributes:navbarTitleTextAttributes];
+    }
+    
+    return as;
+}
+
 - (NSAttributedString*)songsInQueue{
     
    // NSAttributedString *s = [[NSAttributedString alloc] init];
@@ -77,27 +111,32 @@ static fitModel *singletonInstance;
 
     for (MPMediaItem* song in [_currentPlaylist items]) {
         
-        NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                   color,NSForegroundColorAttributeName,
-                                                   [UIColor blackColor], NSShadowAttributeName,
-                                                   [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
-        NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:[song valueForProperty:MPMediaItemPropertyAlbumArtist] attributes:navbarTitleTextAttributes];
 
-        [as appendAttributedString:appendString];
 
         if ([song isEqual: [_currentPlaylist.items objectAtIndex:_musicController.indexOfNowPlayingItem]] ) {
-            
             NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                                        [UIColor blackColor],NSForegroundColorAttributeName,
-                                                       [UIColor blackColor], NSShadowAttributeName,
+                                                       [UIColor grayColor], NSShadowAttributeName,
+                                                       [UIFont boldSystemFontOfSize:20] ,NSFontAttributeName,
                                                        [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
-            NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:[song valueForProperty:MPMediaItemPropertyAlbumArtist] attributes:navbarTitleTextAttributes];
+            
+            NSString *stringWithNewLine = [NSString stringWithFormat:@"%@\n", [song valueForProperty:MPMediaItemPropertyTitle]];
+            NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:stringWithNewLine attributes:navbarTitleTextAttributes];
+            [as appendAttributedString:appendString];
+        }else
+        {
+            NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                       color,NSForegroundColorAttributeName,
+                                                       [UIColor grayColor], NSShadowAttributeName,
+                                                       [UIFont systemFontOfSize:20] ,NSFontAttributeName,
+                                                       [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
+            NSString *stringWithNewLine = [NSString stringWithFormat:@"%@\n", [song valueForProperty:MPMediaItemPropertyTitle]];
+            NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:stringWithNewLine attributes:navbarTitleTextAttributes];
+            
             [as appendAttributedString:appendString];
         }
 
     }
-    NSString *s = myString;
-    
     return as;
 }
 

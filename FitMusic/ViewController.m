@@ -92,23 +92,8 @@
         self.trackLabel.text = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyTitle];
         
         if (self.commentsTextView.tag == 0) {
-            
-            
-            self.commentsTextView.text = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyComments];
-            UIColor * color = [UIColor colorWithRed:17/255.0f green:168/255.0f blue:170/255.0f alpha:1.0f];
+            self.commentsTextView.attributedText = [_fitModel getComments];
 
-            NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                       color,NSForegroundColorAttributeName,
-                                                       [UIColor blackColor], NSShadowAttributeName,
-                                                       [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
-            
-            NSAttributedString *s = [[NSAttributedString alloc] initWithString:[[_fitModel currentSong] valueForProperty:MPMediaItemPropertyComments] attributes:navbarTitleTextAttributes];
-
-            self.commentsTextView.attributedText = s;
-            
-            if ([[_fitModel.currentSong valueForProperty:MPMediaItemPropertyComments] isEqualToString:@""]) {
-                self.commentsTextView.text = @"No comments availible";
-            }
         }
         
         NSNumber *totalTrackTime = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyPlaybackDuration];
@@ -195,30 +180,15 @@
 
 - (IBAction)DisplayPlayNextSongs:(id)sender {
 
-    UIColor * color = [UIColor colorWithRed:17/255.0f green:168/255.0f blue:170/255.0f alpha:1.0f];
-
     
     if (self.commentsTextView.tag == 1) {
         self.commentsTextView.tag = 0;
-        NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                   color,NSForegroundColorAttributeName,
-                                                   [UIColor blackColor], NSShadowAttributeName,
-                                                   [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
-        
-        NSAttributedString *s = [[NSAttributedString alloc] initWithString:[[_fitModel currentSong] valueForProperty:MPMediaItemPropertyComments] attributes:navbarTitleTextAttributes];
 
-        self.commentsTextView.attributedText = s;
+        self.commentsTextView.attributedText = [_fitModel getComments];
 
     }else{
         self.commentsTextView.tag = 1;
-        
-        NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                   color,NSForegroundColorAttributeName,
-                                                   [UIColor blackColor], NSShadowAttributeName,
-                                                   [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
-        
-        NSAttributedString *s = [[NSAttributedString alloc] initWithString:[_fitModel songsInQueue] attributes:navbarTitleTextAttributes];
-        
+
         self.commentsTextView.attributedText = [_fitModel songsInQueue];
 
     }

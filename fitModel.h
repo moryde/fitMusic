@@ -28,7 +28,7 @@
 
 - (NSAttributedString*) songsInQueue;
 - (NSString*) getNextTrack;
-
+- (NSAttributedString*) getComments;
 
 +(fitModel*) getInstance;
 
