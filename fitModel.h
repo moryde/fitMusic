@@ -31,6 +31,7 @@
 - (NSAttributedString*) getComments;
 
 +(fitModel*) getInstance;
++(NSDictionary*) getDictonaryFromComment: (NSString*) string;
 
 @end
 

@@ -23,7 +23,7 @@
     [super viewDidLoad];
     _fitModel = [fitModel getInstance];
     _fitModel.delegate = self;
-    NSLog(@"VIEW DID LOAD");
+
 	// Do any additional setup after loading the view, typically from a nib.
 
     [self updateUI];
@@ -62,7 +62,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
 
-    NSLog(@"VIEW DID APPEAR");
+
     [super viewDidAppear:YES];
     _fitModel.delegate = self;
     
@@ -74,7 +74,7 @@
 }
 
 -(void)newInformation {
-    NSLog(@"TIMER");
+
     [self updateUI];
 }
 
@@ -98,16 +98,17 @@
         
         NSNumber *totalTrackTime = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyPlaybackDuration];
         NSTimeInterval currentPlaybackTime = [_fitModel.musicController currentPlaybackTime];
-        int timeRemaining = totalTrackTime.intValue - currentPlaybackTime;
-        
+        //int timeRemaining = totalTrackTime.intValue - currentPlaybackTime;
+        int timeRemaining = currentPlaybackTime;
         [self.playProgressSlider setProgress:(currentPlaybackTime/[totalTrackTime integerValue]) animated:YES];
         self.nextTrackLabel.text = [_fitModel getNextTrack];
         self.timeLeftLabel.text = [NSString stringWithFormat:@"%i",timeRemaining];
         
-        NSLog(@"%f",self.playProgressSlider.progress);
+
         int hour = timeRemaining / 3600;
         int minutes = timeRemaining / 60 - hour * 60;
         int seconds = timeRemaining - (hour * 3600 + minutes * 60);
+        
         NSString *stringTime = [NSString stringWithFormat:@"%i:%@",minutes,[NSString stringWithFormat:@"%02d", seconds]];
         
         if (self.format == 0) {
@@ -151,7 +152,7 @@
 }
 
 - (IBAction)playButton:(id)sender {
-    NSLog(@"PlayButtonPressed");
+
     if (_fitModel.currentPlaylist) {
         if ([_fitModel.musicController playbackState] == MPMusicPlaybackStatePlaying) {
             [_fitModel stopMusic];
@@ -163,8 +164,15 @@
 
 
 - (IBAction)nextButton:(id)sender {
+   // [_fitModel.musicController setCurrentPlaybackRate:1.5];
+   // [_fitModel.musicController skipToNextItem];
+    
+    NSString *s = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyAlbumPersistentID];
 
-    [_fitModel.musicController skipToNextItem];
+    NSLog(s);
+    
+    //[_fitModel.currentSong setValue:@"loool" forKey:MPMediaItemPropertyComments];
+                                                            
 }
 
 - (IBAction)previousButton:(id)sender {

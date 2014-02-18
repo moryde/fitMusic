@@ -24,11 +24,16 @@ static fitModel *singletonInstance;
         MPMediaQuery *playlistsQuery = [MPMediaQuery playlistsQuery];
         self.playLists = [playlistsQuery collections];
         self.musicController = [MPMusicPlayerController iPodMusicPlayer];
+        
         [self.musicController stop];
         NSLog(@"Singleton Init");
     }
     return self;
     
+}
+
+- (void)mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection{
+    NSLog(@"LOOOL");
 }
 
 +(fitModel*) getInstance {
@@ -52,6 +57,10 @@ static fitModel *singletonInstance;
 - (NSString*)getNextTrack{
 
     long i = _musicController.indexOfNowPlayingItem;
+
+    if (i = -1) {
+        i = 0;
+    }
     
     if (i >= 0) {
         NSArray *songs = [_currentPlaylist items];
@@ -67,37 +76,72 @@ static fitModel *singletonInstance;
 
 }
 
++ (NSDictionary*)getDictonaryFromComment: (NSString*) string{
+    NSMutableDictionary *queryStringDictionary = [[NSMutableDictionary alloc] init];
+    NSArray *urlComponents = [string componentsSeparatedByString:@"&"];
+    if (urlComponents.count > 1) {
+        for (NSString *keyValuePair in urlComponents)
+        {
+            NSArray *pairComponents = [keyValuePair componentsSeparatedByString:@"="];
+            NSString *key = [pairComponents objectAtIndex:0];
+            NSString *value = [pairComponents objectAtIndex:1];
+            
+            [queryStringDictionary setObject:value forKey:key];
+        }
+        return queryStringDictionary;
+    }
+    
+    return [[NSDictionary alloc] initWithObjectsAndKeys:[urlComponents objectAtIndex:0],@"0", nil];
+}
+
 - (NSAttributedString*) getComments {
-    NSAttributedString *as = [NSAttributedString alloc];
     
-    NSData *data = [[_currentSong valueForProperty:MPMediaItemPropertyComments] dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error;
-    
-    NSMutableDictionary  * json = [NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: &error];
-
-    if(error){
-        NSLog([error description]);
-    }
-    
-    NSLog([json debugDescription]);
-    if ([json objectForKey:[NSString stringWithFormat:@"%f",_musicController.currentPlaybackTime]]) {
-        NSLog(@"EVEN");
-    }
-    
+    NSMutableAttributedString *as = [[NSMutableAttributedString alloc]init];
     UIColor * color = [UIColor colorWithRed:17/255.0f green:168/255.0f blue:170/255.0f alpha:1.0f];
+    NSDictionary *comments = [fitModel getDictonaryFromComment:[_currentSong valueForProperty:MPMediaItemPropertyComments]];
+    if (comments.count > 0)
+    {
 
+    for (NSString *key in comments) {
+        
+        int i = _musicController.currentPlaybackTime;
+        
+        if (key.intValue > i) {
+            
+            NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                       [UIColor blackColor],NSForegroundColorAttributeName,
+                                                       [UIColor grayColor], NSShadowAttributeName,
+                                                       [UIFont boldSystemFontOfSize:20] ,NSFontAttributeName,
+                                                       [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
+            NSString *stringWithNewLine = [NSString stringWithFormat:@"[%@ Sec] %@\n",key, [comments objectForKey:key]];
+            NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:stringWithNewLine attributes:navbarTitleTextAttributes];
+            [as appendAttributedString:appendString];
+
+        } else {
+            NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                       color,NSForegroundColorAttributeName,
+                                                       [UIColor grayColor], NSShadowAttributeName,
+                                                       [UIFont boldSystemFontOfSize:20] ,NSFontAttributeName,
+                                                       [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
+        
+            NSString *stringWithNewLine = [NSString stringWithFormat:@"[%@ Sec] %@\n",key, [comments objectForKey:key]];
+            NSAttributedString *appendString = [[NSAttributedString alloc] initWithString:stringWithNewLine attributes:navbarTitleTextAttributes];
+            [as appendAttributedString:appendString];
+    
+        }
+    }
+        return as;
+    }
+    
     NSDictionary *navbarTitleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                                color,NSForegroundColorAttributeName,
-                                               [UIColor blackColor], NSShadowAttributeName,
+                                               [UIColor grayColor], NSShadowAttributeName,
                                                [UIFont boldSystemFontOfSize:20] ,NSFontAttributeName,
                                                [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
-    if ([_currentSong valueForProperty:MPMediaItemPropertyComments]) {
-        [as initWithString:[_currentSong valueForProperty:MPMediaItemPropertyComments] attributes:navbarTitleTextAttributes];
-    } else {
-        [as initWithString:@"No comments present for this song, please add in iTunes" attributes:navbarTitleTextAttributes];
-    }
     
-    return as;
+    return [[NSAttributedString alloc] initWithString:@"No comment availible for this song, please add them in iTunes" attributes:navbarTitleTextAttributes];
+
+    
 }
 
 - (NSAttributedString*)songsInQueue{
@@ -153,12 +197,12 @@ static fitModel *singletonInstance;
                                                object: self.musicController];
     
     [self.musicController beginGeneratingPlaybackNotifications];
-    NSLog(@"Nitofications registered");
+
 }
 
 
 -(void) nowPlayItemChanged: (id) notification{
-    NSLog(@"Now PlayingItem Changed");
+
     _currentSong = [[_currentPlaylist items]objectAtIndex: _musicController.indexOfNowPlayingItem];
     [delegate newInformation];
 }
@@ -177,7 +221,7 @@ static fitModel *singletonInstance;
 }
 
 - (void) startMusic {
-    NSLog(@"Start Music");
+
     [self registerMediaPlayerNotifications];
     [_musicController play];
     NSTimer *uiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerUpdated) userInfo:nil repeats:YES];
