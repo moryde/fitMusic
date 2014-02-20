@@ -42,6 +42,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
    return [_fitmodel.playLists count];
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -56,10 +57,6 @@
     cell.textLabel.text = [[_fitmodel.playLists objectAtIndex:indexPath.row] valueForProperty:MPMediaPlaylistPropertyName];
     return cell;
     
-}
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
 }
 
 @end

@@ -25,15 +25,6 @@
                                     <segue destination="QMh-ea-f8Z" kind="push" identifier="selectPlaylist" id="nP7-lo-nxu"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="Comments" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jux-2k-rlj">
-                                <rect key="frame" x="20" y="124" width="280" height="204"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="tintColor" red="0.0" green="0.59861128379999995" blue="0.60575228930000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="textColor" red="0.0" green="0.59861128379999995" blue="0.60575228930000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <label opaque="NO" clipsSubviews="YES" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kja-Ce-bWO">
                                 <rect key="frame" x="20" y="464" width="90" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -128,6 +119,33 @@
                                 <color key="textColor" red="0.0" green="0.59861128379999995" blue="0.60575228930000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="singleLineEtched" rowHeight="63" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="wge-87-l4Y">
+                                <rect key="frame" x="20" y="127" width="280" height="199"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCell" id="B0b-o0-qP6">
+                                        <rect key="frame" x="0.0" y="22" width="280" height="63"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="B0b-o0-qP6" id="AcC-eU-HsI">
+                                            <rect key="frame" x="0.0" y="0.0" width="280" height="62"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <progressView opaque="NO" tag="1" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="o6X-Oj-3NM">
+                                                    <rect key="frame" x="0.0" y="59" width="280" height="3"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="progressTintColor" red="0.0" green="0.59861128379999995" blue="0.60575228930000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="trackTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                </progressView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="vXZ-lx-hvc" id="U4p-o0-slg"/>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="vx7-T1-pRP"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </view>
@@ -137,11 +155,11 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
-                        <outlet property="commentsTextView" destination="jux-2k-rlj" id="hdh-gV-YLC"/>
                         <outlet property="nextTrackLabel" destination="bU9-kZ-ucL" id="m4P-YK-ALc"/>
                         <outlet property="playButton" destination="FCm-WF-vb9" id="Gbz-Rf-pkD"/>
                         <outlet property="playProgressSlider" destination="iXL-aL-N2k" id="ZeE-IX-Yal"/>
                         <outlet property="playlistButton" destination="FsJ-X7-Bh6" id="H9Y-Km-L7x"/>
+                        <outlet property="tableView" destination="wge-87-l4Y" id="A5d-Fc-4nr"/>
                         <outlet property="timeLeftLabel" destination="Kja-Ce-bWO" id="2lF-g1-JIe"/>
                         <outlet property="trackLabel" destination="Mke-zL-bkM" id="Nmk-q4-s6g"/>
                     </connections>

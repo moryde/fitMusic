@@ -21,6 +21,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _tableView.dataSource = self;
+    _tableView.delegate = self;
     _fitModel = [fitModel getInstance];
     _fitModel.delegate = self;
 
@@ -42,6 +44,40 @@
     [self setTitle:@"fitMusic"];
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    NSLog(@"NUMBER OF CELLS RETURN");
+    
+    NSLog(@"%i", [_fitModel.commentsOfCurrentSong count]);
+    return [_fitModel.commentsOfCurrentSong count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"LOOL");
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
+    UIProgressView *progress;
+    
+    progress = (UIProgressView*)[cell viewWithTag:1];
+    NSDictionary *d = [_fitModel.commentsOfCurrentSong objectAtIndex:indexPath.row];
+    
+    NSString *s = [d objectForKey:@"comment"];
+    
+    int endTime = [[[_fitModel.commentsOfCurrentSong objectAtIndex:indexPath.row+1] objectForKey:@"time"] intValue];
+    
+    
+    if ([_fitModel.musicController currentPlaybackTime] >= [[d objectForKey:@"time"] intValue] && [_fitModel.musicController currentPlaybackTime] < endTime) {
+        float progressInt = endTime - [_fitModel.musicController currentPlaybackTime];
+        [progress setProgress:progressInt/[_fitModel.musicController currentPlaybackTime] animated:YES];
+    }
+    
+    [progress setProgress:0.1 animated:YES];
+
+    cell.textLabel.text = s;
+    
+    
+
+    return cell;
+}
+
 - (void)setTitle:(NSString *)title
 {
     [super setTitle:title];
@@ -60,10 +96,12 @@
     [titleView sizeToFit];
 }
 
+
 -(void)viewDidAppear:(BOOL)animated{
 
-
     [super viewDidAppear:YES];
+    [self.tableView reloadData];
+    NSLog(@"View did appear");
     _fitModel.delegate = self;
     
 }
@@ -86,7 +124,7 @@
 -(void)updateUI{
 
     if ((_fitModel.currentPlaylist)) {
-        
+        [self.tableView reloadData];
         //[[self.navigationController topViewController] setTitle:[_fitModel.currentPlaylist valueForProperty:MPMediaPlaylistPropertyName]];
         [self.playlistButton setTitle:[_fitModel.currentPlaylist valueForProperty:MPMediaPlaylistPropertyName] forState:UIControlStateNormal];
         self.trackLabel.text = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyTitle];
@@ -115,7 +153,6 @@
             self.timeLeftLabel.text = stringTime;
         } else {
             self.timeLeftLabel.text = [NSString stringWithFormat:@"%i",timeRemaining];
-            
         }
         
     }else
@@ -165,11 +202,7 @@
 
 - (IBAction)nextButton:(id)sender {
    // [_fitModel.musicController setCurrentPlaybackRate:1.5];
-   // [_fitModel.musicController skipToNextItem];
-    
-    NSString *s = [_fitModel.currentSong valueForProperty:MPMediaItemPropertyAlbumPersistentID];
-
-    NSLog(s);
+[_fitModel.musicController skipToNextItem];
     
     //[_fitModel.currentSong setValue:@"loool" forKey:MPMediaItemPropertyComments];
                                                             

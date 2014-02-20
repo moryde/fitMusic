@@ -10,7 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "AppDelegate.h"
 #import "fitModel.h"
-@interface ViewController : UIViewController <UINavigationControllerDelegate, fitDelegate>{
+@interface ViewController : UIViewController <UINavigationControllerDelegate, fitDelegate, UITableViewDataSource,UITableViewDelegate>{
     
     MPMusicPlayerController *musicPlayController;
     BOOL format;
@@ -24,6 +24,7 @@
 @property (strong, nonatomic) MPMediaPlaylist *playList;
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (nonatomic) BOOL format;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 - (IBAction)playButton:(id)sender;
 - (IBAction)nextButton:(id)sender;

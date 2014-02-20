@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8639668F-AD16-4DE1-ACA2-6774DCE425AA</string>
+	<key>IDESourceControlProjectName</key>
+	<string>FitMusic</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>DF085303-4A98-4248-9ADB-0D423EF5AE84</key>
+		<string>https://github.com/moryde/fitMusic.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>FitMusic.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>DF085303-4A98-4248-9ADB-0D423EF5AE84</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/moryde/fitMusic.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>DF085303-4A98-4248-9ADB-0D423EF5AE84</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DF085303-4A98-4248-9ADB-0D423EF5AE84</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FitMusic</string>
+		</dict>
+	</array>
+</dict>
+</plist>

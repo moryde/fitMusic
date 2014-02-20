@@ -21,6 +21,7 @@
 @property (strong, nonatomic) MPMediaPlaylist *currentPlaylist;
 @property (nonatomic) MPMediaItem *currentSong;
 @property (nonatomic) NSArray *playLists;
+@property (strong,nonatomic) NSMutableArray *commentsOfCurrentSong;
 
 - (void) registerMediaPlayerNotifications;
 - (void) startMusic;
@@ -29,9 +30,11 @@
 - (NSAttributedString*) songsInQueue;
 - (NSString*) getNextTrack;
 - (NSAttributedString*) getComments;
+- (NSDictionary*) getDictonaryFromComment: (NSString*) string;
+
+
 
 +(fitModel*) getInstance;
-+(NSDictionary*) getDictonaryFromComment: (NSString*) string;
 
 @end
 

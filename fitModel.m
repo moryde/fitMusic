@@ -23,8 +23,8 @@ static fitModel *singletonInstance;
         
         MPMediaQuery *playlistsQuery = [MPMediaQuery playlistsQuery];
         self.playLists = [playlistsQuery collections];
+        self.commentsOfCurrentSong = [[NSMutableArray alloc] init];
         self.musicController = [MPMusicPlayerController iPodMusicPlayer];
-        
         [self.musicController stop];
         NSLog(@"Singleton Init");
     }
@@ -76,9 +76,12 @@ static fitModel *singletonInstance;
 
 }
 
-+ (NSDictionary*)getDictonaryFromComment: (NSString*) string{
+
+- (NSDictionary*)getDictonaryFromComment: (NSString*) string{
     NSMutableDictionary *queryStringDictionary = [[NSMutableDictionary alloc] init];
     NSArray *urlComponents = [string componentsSeparatedByString:@"&"];
+    _commentsOfCurrentSong = nil;
+    _commentsOfCurrentSong = [[NSMutableArray alloc] init];
     if (urlComponents.count > 1) {
         for (NSString *keyValuePair in urlComponents)
         {
@@ -86,7 +89,12 @@ static fitModel *singletonInstance;
             NSString *key = [pairComponents objectAtIndex:0];
             NSString *value = [pairComponents objectAtIndex:1];
             
+            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:key,@"time",value,@"comment", nil];
+
+            [_commentsOfCurrentSong addObject:dict];
+
             [queryStringDictionary setObject:value forKey:key];
+
         }
         return queryStringDictionary;
     }
@@ -98,7 +106,9 @@ static fitModel *singletonInstance;
     
     NSMutableAttributedString *as = [[NSMutableAttributedString alloc]init];
     UIColor * color = [UIColor colorWithRed:17/255.0f green:168/255.0f blue:170/255.0f alpha:1.0f];
-    NSDictionary *comments = [fitModel getDictonaryFromComment:[_currentSong valueForProperty:MPMediaItemPropertyComments]];
+    NSDictionary *comments = [self getDictonaryFromComment:[_currentSong valueForProperty:MPMediaItemPropertyComments]];
+    
+    
     if (comments.count > 0)
     {
 
@@ -218,6 +228,8 @@ static fitModel *singletonInstance;
 
 - (void) timerUpdated{
     [delegate newInformation];
+    
+    
 }
 
 - (void) startMusic {
