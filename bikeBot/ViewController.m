@@ -46,13 +46,16 @@
                                                [UIColor whiteColor],NSForegroundColorAttributeName,
                                                [UIColor blackColor], NSShadowAttributeName,
                                                [NSValue valueWithUIOffset:UIOffsetMake(-1, 0)], NSShadowAttributeName, nil];
-    [[UINavigationBar appearance] setTitleTextAttributes:navbarTitleTextAttributes];
-    UILabel *titleView = (UILabel *)self.navigationItem.titleView;
-    titleView.textColor = [UIColor whiteColor]; // Change to desired color
-    self.navigationItem.titleView = titleView;
-
-    [self setTitle:@"fitMusic"];
-    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont boldSystemFontOfSize:20.0];
+    label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+    label.textAlignment = NSTextAlignmentCenter;
+    // ^-Use UITextAlignmentCenter for older SDKs.
+    label.textColor = [UIColor whiteColor]; // change this color
+    self.navigationItem.titleView = label;
+    label.text = NSLocalizedString(@"firMusic", @"");
+    [label sizeToFit];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -116,11 +119,13 @@
 
 - (IBAction)addTempo:(UIButton *)sender {
     [_fitModel.musicController setCurrentPlaybackRate:_fitModel.musicController.currentPlaybackRate+0.2];
-    NSLog(@"%f",_fitModel.musicController.currentPlaybackRate);
+    [_tempeButton setTitle:[NSString stringWithFormat:@"%f",_fitModel.musicController.currentPlaybackRate] forState:UIControlStateNormal];
 }
 
 - (IBAction)subtractTempo:(UIButton *)sender {
     [_fitModel.musicController setCurrentPlaybackRate:_fitModel.musicController.currentPlaybackRate-0.2];
+    [_tempeButton setTitle:[NSString stringWithFormat:@"%f",_fitModel.musicController.currentPlaybackRate] forState:UIControlStateNormal];
+
 }
 
 - (IBAction)QueueButton:(UIButton*)sender {
@@ -128,8 +133,6 @@
         [_nextInQueueButton setSelected:NO];
         [_nextInQueueButton setBackgroundColor:[UIColor whiteColor]];
         [_nextInQueueButton setTitleColor:_mainColor forState:UIControlStateNormal];
-
-
     }else{
         [_nextInQueueButton setSelected:YES];
         [_nextInQueueButton setBackgroundColor:_mainColor];
